@@ -44,6 +44,23 @@ class ToDoListViewController: UITableViewController {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //print(itemArray[indexPath.row])
+        
+        
+        //this will make the deselected animation
+        
+        
+       
+        
+        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
+            tableView.cellForRow(at: indexPath)?.accessoryType = .none
+        } else {
+            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+        }
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+    }
     //this we use to make the cell as the itemArray ka array
 
     /*
