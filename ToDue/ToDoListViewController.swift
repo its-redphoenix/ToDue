@@ -10,16 +10,12 @@ import UIKit
 
 class ToDoListViewController: UITableViewController {
     
-    let itemArray = ["Get Hired as an iOS Dev", "Become the best iOS Dev", "Moving to US for my new iOS dev job"]
+    var itemArray = ["Buy Vegatables", "Buy Fresh Pav", "Make Pav Bhaji"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+       
     }
 
     // MARK: - Table view data source
@@ -63,49 +59,37 @@ class ToDoListViewController: UITableViewController {
     }
     //this we use to make the cell as the itemArray ka array
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+
+    
+    //add button pressed action
+    
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
+        var textField = UITextField()
+        //global variable to get the text field info
+        
+        let alert = UIAlertController(title: "Add New ToDue Item", message: "", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+           
+            self.itemArray.append(textField.text!)
+            // add the new item from the text field text to the array itemArray
+            self.tableView.reloadData()
+            //reload the table view to see the new entry
+        }
+        //these are all alert fields elements
+        alert.addTextField { (alertField) in
+            alertField.placeholder = "Create a new task!"
+           textField = alertField
+        }
+        //this adds a textfield
+        alert.addAction(action)
+        
+        //this all of the above wont make sense until you present the viewcontroller
+        
+        present(alert, animated: true, completion: nil)
+        
+        //this presents the view controller
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
+    
 
 }
