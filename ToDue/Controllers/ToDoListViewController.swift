@@ -11,11 +11,20 @@ import UIKit
 class ToDoListViewController: UITableViewController {
     
     var itemArray = [Item]()
+     let dataFile = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+       
+        
+     
+        
+        
+        //ok breathe
+        //this is path document directory -> in the user's home directory - .userDomainMask
+        
         let newItem = Item()
         newItem.title = "Buy Dahi Wada"
         itemArray.append(newItem)
@@ -98,6 +107,19 @@ class ToDoListViewController: UITableViewController {
             let newItem = Item()
             newItem.title = textField.text!
             
+            self.itemArray.append(newItem)
+            
+            let encoder = PropertyListEncoder()
+            do {
+                let datas = try encoder.encode(self.itemArray)
+                try datas.write(to: self.dataFile!)
+                
+                           
+            } catch {
+                print(error)
+                
+            }
+           
             
           //  self.itemArray.append(textField.text!)
             // add the new item from the text field text to the array itemArray
