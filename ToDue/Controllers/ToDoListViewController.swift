@@ -24,18 +24,20 @@ class ToDoListViewController: UITableViewController {
         
         //ok breathe
         //this is path document directory -> in the user's home directory - .userDomainMask
+//
+//        let newItem = Item()
+//        newItem.title = "Buy Dahi Wada"
+//        itemArray.append(newItem)
+//
+//        let newItem2 = Item()
+//           newItem2.title = "Buy Pav Bhaji"
+//           itemArray.append(newItem2)
+//
+//        let newItem3 = Item()
+//                  newItem3.title = "Buy Sev Puri"
+//                  itemArray.append(newItem3)
         
-        let newItem = Item()
-        newItem.title = "Buy Dahi Wada"
-        itemArray.append(newItem)
-        
-        let newItem2 = Item()
-           newItem2.title = "Buy Pav Bhaji"
-           itemArray.append(newItem2)
-        
-        let newItem3 = Item()
-                  newItem3.title = "Buy Sev Puri"
-                  itemArray.append(newItem3)
+        loadItems()
     }
 
     // MARK: - Table view data sources
@@ -80,6 +82,7 @@ class ToDoListViewController: UITableViewController {
         
         //this will make the deselected animation
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+        saveItems()
         
 
         if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
@@ -88,6 +91,7 @@ class ToDoListViewController: UITableViewController {
             tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         }
         tableView.deselectRow(at: indexPath, animated: true)
+        saveItems()
         
     }
     //this we use to make the cell as the itemArray ka array
@@ -108,23 +112,9 @@ class ToDoListViewController: UITableViewController {
             newItem.title = textField.text!
             
             self.itemArray.append(newItem)
-            
-            let encoder = PropertyListEncoder()
-            do {
-                let datas = try encoder.encode(self.itemArray)
-                try datas.write(to: self.dataFile!)
-                
-                           
-            } catch {
-                print(error)
-                
-            }
-           
-            
-          //  self.itemArray.append(textField.text!)
-            // add the new item from the text field text to the array itemArray
-            self.tableView.reloadData()
-            //reload the table view to see the new entry
+          //write finction here****
+            self.saveItems()
+            //saves the items in the items.plist
         }
         //these are all alert fields elements
         alert.addTextField { (alertField) in
@@ -141,5 +131,45 @@ class ToDoListViewController: UITableViewController {
         //this presents the view controller
     }
     
+    
+//this function is used to save items in
+    func saveItems () {
+        
+                  let encoder = PropertyListEncoder()
+                  do {
+                      let datas = try encoder.encode(itemArray)
+                      try datas.write(to: dataFile!)
+                      
+                                 
+                  } catch {
+                      print(error)
+                      
+                  }
+                 
+                  
+                //  self.itemArray.append(textField.text!)
+                  // add the new item from the text field text to the array itemArray
+                  tableView.reloadData()
+                  //reload the table view to see the new entry
+    }
+    
+    func loadItems () {
+        
+        
+        do {
+            if let datas = try? Data(contentsOf: dataFile!) {
+                let decoder = PropertyListDecoder()
+                
+                do {
+                     try itemArray = decoder.decode([Item].self, from: datas)
+                } catch {
+                    print(error)
+                }
+               
+            }
+        }
+    }
 
 }
+
+
