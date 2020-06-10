@@ -40,7 +40,7 @@ class ToDoListViewController: UITableViewController {
 //                  newItem3.title = "Buy Sev Puri"
 //                  itemArray.append(newItem3)
         
-       // remove this yo****** loadItems()
+       loadItems()
     }
 
     // MARK: - Table view data sources
@@ -160,11 +160,18 @@ class ToDoListViewController: UITableViewController {
                   //reload the table view to see the new entry
     }
     
-//    func loadItems () {
-//
-//
-//       
-//    }
+    func loadItems () {
+
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        
+        do {
+            itemArray = try context.fetch(request)
+        }
+        catch {
+            print(error)
+        }
+       
+    }
 
 }
 
