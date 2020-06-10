@@ -7,16 +7,19 @@
 //
 
 import UIKit
+import CoreData
 
 class ToDoListViewController: UITableViewController {
     
     var itemArray = [Item]()
-     let dataFile = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+     
+     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        print (FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
        
         
      
@@ -37,7 +40,7 @@ class ToDoListViewController: UITableViewController {
 //                  newItem3.title = "Buy Sev Puri"
 //                  itemArray.append(newItem3)
         
-        loadItems()
+       // remove this yo****** loadItems()
     }
 
     // MARK: - Table view data sources
@@ -108,8 +111,13 @@ class ToDoListViewController: UITableViewController {
         let alert = UIAlertController(title: "Add New ToDue Item", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
            
-            let newItem = Item()
+            
+           
+            let newItem = Item(context: self.context)
             newItem.title = textField.text!
+            newItem.done = false
+            
+            //new coredata item created here.
             
             self.itemArray.append(newItem)
           //write finction here****
@@ -135,14 +143,13 @@ class ToDoListViewController: UITableViewController {
 //this function is used to save items in
     func saveItems () {
         
-                  let encoder = PropertyListEncoder()
+                 
                   do {
-                      let datas = try encoder.encode(itemArray)
-                      try datas.write(to: dataFile!)
-                      
+                     
+                    try context.save()
                                  
                   } catch {
-                      print(error)
+                      print("This is error while saving context:\(error)")
                       
                   }
                  
@@ -153,22 +160,11 @@ class ToDoListViewController: UITableViewController {
                   //reload the table view to see the new entry
     }
     
-    func loadItems () {
-        
-        
-        do {
-            if let datas = try? Data(contentsOf: dataFile!) {
-                let decoder = PropertyListDecoder()
-                
-                do {
-                     try itemArray = decoder.decode([Item].self, from: datas)
-                } catch {
-                    print(error)
-                }
-               
-            }
-        }
-    }
+//    func loadItems () {
+//
+//
+//       
+//    }
 
 }
 
