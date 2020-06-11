@@ -12,8 +12,7 @@ import CoreData
 class ToDoListViewController: UITableViewController {
     
     var itemArray = [Item]()
-     
-     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
 
     override func viewDidLoad() {
@@ -160,9 +159,9 @@ class ToDoListViewController: UITableViewController {
                   //reload the table view to see the new entry
     }
     
-    func loadItems () {
+    func loadItems (with request: NSFetchRequest<Item> = Item.fetchRequest()) {
 
-        let request : NSFetchRequest<Item> = Item.fetchRequest()
+    //    let request : NSFetchRequest<Item> = Item.fetchRequest()
         
         do {
             itemArray = try context.fetch(request)
@@ -170,9 +169,51 @@ class ToDoListViewController: UITableViewController {
         catch {
             print(error)
         }
+        tableView.reloadData()
        
     }
 
 }
 
+// MARK - extension
+
+extension ToDoListViewController : UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        
+        let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        
+        request.predicate = predicate
+        
+        let sortDescriptor = NSSortDescriptor(key: "title", ascending: true)
+        
+        request.sortDescriptors = [sortDescriptor]
+        
+        loadItems(with: request)
+        
+//        do {
+//                   itemArray = try context.fetch(request)
+//               }
+//               catch {
+//                   print(error)
+//               }
+//        tableView.reloadData()
+        
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            
+            
+            DispatchQueue.main.async {
+                self.loadItems()
+                searchBar.resignFirstResponder()
+            }
+            
+        }
+    }
+    
+    
+}
 
